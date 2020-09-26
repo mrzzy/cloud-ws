@@ -5,6 +5,6 @@ tag*
 # env files
 .env
 # tfstate
-.tfstate
+*.tfstate*
 # terraform plugins
 .terraform

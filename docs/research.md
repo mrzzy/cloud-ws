@@ -1,15 +1,15 @@
-## Research
+# Research
 Research compiled worldskills.
 
-# Preparing for aws gameday series
+### Preparing for aws gameday series
 - iam: check and lock down accounts if possbile, change passwords
 
-# Past aws gameday code
+### Past aws gameday code
 https://github.com/rumd3x/aws-gameday-unicorn
  - server appears to be some form of binary (aws 2019 reinvent gameday)
  - docker is possible (alpine seems to work, so small docker images
  
-# aws gameday briefing from stream 2017
+### aws gameday briefing from stream 2017
 https://www.youtube.com/watch?v=1ry0mYEdfno
 - iam: check what we can access
 - services map: go through ec2/elastic cache/rds figure out what is connected to what
