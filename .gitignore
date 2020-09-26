@@ -1,0 +1,6 @@
+# tag files
+tag*
+# vim sesions
+.session.vim
+# env files
+.env
