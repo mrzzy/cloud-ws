@@ -4,3 +4,7 @@ tag*
 .session.vim
 # env files
 .env
+# tfstate
+.tfstate
+# terraform plugins
+.terraform
