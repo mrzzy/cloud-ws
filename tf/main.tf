@@ -9,18 +9,22 @@ provider "aws" {
 
 ## Remote Terraform State
 # S3 Bucket for storing terraform remote state
-resource "aws_s3_bucket" "tf_state_bucket" {
-  bucket = "cloud-ws-tf-remote-state"
-  acl    = "private"
-
-  versioning {
-    enabled = true
-  }
-  tags = {
-    Name    = "Terraform State"
-    Project = "cloud-ws"
-  }
-}
+#resource "aws_s3_bucket" "tf_state_bucket" {
+#  bucket = "cloud-ws-tf-remote-state"
+#  acl    = "private"
+#
+#  versioning {
+#    enabled = true
+#  }
+#  tags = {
+#    Name    = "Terraform State"
+#    Project = "cloud-ws"
+#  }
+#
+#  lifecycle {
+#    prevent_destroy = true
+#  }
+#}
 
 # Configure terraform to use remote state
 terraform {
@@ -35,6 +39,18 @@ terraform {
 resource "aws_key_pair" "ssh_key" {
   key_name   = "cloud-ws-ssh-key"
   public_key = var.ssh_public_key
+}
+
+
+## Netorking
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnet" "default" {
+  vpc_id = data.aws_vpc.default.id
+  availability_zone = "ap-southeast-1c"
+  default_for_az = true
 }
 
 
@@ -80,7 +96,7 @@ resource "aws_security_group" "devcrate_sg" {
 # Security group required to allow SSH
 resource "aws_instance" "devcrate" {
   instance_type = "t3.micro"
-  ami = data.aws_ami.ubuntu.id
+  ami           = data.aws_ami.ubuntu.id
 
   tags = {
     Name    = "devcrate instance"
@@ -98,3 +114,28 @@ resource "aws_instance" "devcrate" {
   EOF
 }
 
+module "autoscaling_instances" {
+  source = "./autoscaling"
+
+  key_pair      = aws_key_pair.ssh_key.key_name
+  name_prefix   = "test_prefix"
+  instance_type = "t3.micro"
+  aws_region    = "ap-southeast-1"
+  ami_id        = data.aws_ami.ubuntu.id
+  vpc_id        = data.aws_vpc.default.id
+  subnet_id = data.aws_subnet.default.id
+  exposed_ports = [
+    22,
+    2222,
+    8080
+  ]
+  min_scale = 2
+  max_scale = 3
+  user_data = <<EOF
+  #!env sh
+  set -ex
+  curl -fsSL https://get.docker.com | sh -
+  sudo usermod -aG docker ubuntu
+  docker pull ${var.devcrate_container}
+  EOF
+}
