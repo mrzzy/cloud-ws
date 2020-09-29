@@ -92,27 +92,27 @@ resource "aws_instance" "devcrate" {
   EOF
 }
 
-module "autoscaling_instances" {
-  source = "./autoscaling"
-
-  key_pair      = aws_key_pair.ssh_key.key_name
-  name_prefix   = "test_prefix"
-  instance_type = "t3.micro"
-  ami_id        = data.aws_ami.ubuntu.id
-  vpc_id        = data.aws_vpc.default.id
-  subnet_id = data.aws_subnet.default.id
-  exposed_ports = [
-    22,
-    2222,
-    8080
-  ]
-  min_scale = 2
-  max_scale = 3
-  user_data = <<EOF
-  #!env sh
-  set -ex
-  curl -fsSL https://get.docker.com | sh -
-  sudo usermod -aG docker ubuntu
-  docker pull ${var.devcrate_container}
-  EOF
-}
+#module "autoscaling_instances" {
+#  source = "./autoscaling"
+#
+#  key_pair      = aws_key_pair.ssh_key.key_name
+#  name_prefix   = "test_prefix"
+#  instance_type = "t3.micro"
+#  ami_id        = data.aws_ami.ubuntu.id
+#  vpc_id        = data.aws_vpc.default.id
+#  subnet_id = data.aws_subnet.default.id
+#  exposed_ports = [
+#    22,
+#    2222,
+#    8080
+#  ]
+#  min_scale = 2
+#  max_scale = 3
+#  user_data = <<EOF
+#  #!env sh
+#  set -ex
+#  curl -fsSL https://get.docker.com | sh -
+#  sudo usermod -aG docker ubuntu
+#  docker pull ${var.devcrate_container}
+#  EOF
+#}
