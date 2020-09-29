@@ -1,0 +1,32 @@
+#
+# Cloud Worldskils 2020
+# CI - Terraform Lint & Diff
+# 
+
+on:
+- pull_request
+- push
+
+jobs:
+  lint-diff-terraform:
+    name: Lint & Diff Terraform
+    runs-on: ubuntu-20.04
+    container: mrzzy/cw-terraform-ci:latest
+    defaults:
+      run:
+        working-directory: "tf"
+    env:
+      TF_VAR_ssh_public_key: "${{ secrets.TF_VAR_ssh_public_key }}"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      AWS_DEFAULT_REGION: "${{ secrets.AWS_DEFAULT_REGION }}"
+    steps: 
+      - uses: actions/checkout@v2
+      - name: Lint Terraform
+        run: |
+          terraform init
+          terraform validate
+          tflint --module --deep
+      - name: Diff Terraform
+        run: |
+          terraform plan

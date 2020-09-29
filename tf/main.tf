@@ -98,7 +98,6 @@ module "autoscaling_instances" {
   key_pair      = aws_key_pair.ssh_key.key_name
   name_prefix   = "test_prefix"
   instance_type = "t3.micro"
-  aws_region    = "ap-southeast-1"
   ami_id        = data.aws_ami.ubuntu.id
   vpc_id        = data.aws_vpc.default.id
   subnet_id = data.aws_subnet.default.id

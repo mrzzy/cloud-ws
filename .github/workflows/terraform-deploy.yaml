@@ -1,0 +1,26 @@
+#
+# Cloud Worldskils 2020
+# CI - Terraform AWS Deploy
+
+on:
+  push: [ master ]
+
+jobs:
+  deploy-terraform:
+    name: Deploy Terraform
+    runs-on: ubuntu-20.04
+    container: mrzzy/cw-terraform-ci:latest
+    defaults:
+      run:
+        shell: sh
+    env:
+      TF_VAR_ssh_public_key: "${{ secrets.TF_VAR_ssh_public_key }}"
+      AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
+      AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      AWS_DEFAULT_REGION: "${{ secrets.AWS_DEFAULT_REGION }}"
+      TF_VAR_tfstate_bucket: "${{ secrets.TF_VAR_tfstate_bucket }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy
+
+
