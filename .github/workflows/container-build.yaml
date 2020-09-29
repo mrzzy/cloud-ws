@@ -1,0 +1,27 @@
+#
+# Cloud Worldskils 2020
+# CI - Container Build
+# 
+
+on:
+- pull_request
+- push
+
+jobs:
+  build-containers:
+    name: Build Docker Containeers
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_USER: mrzzy
+      DOCKER_REPO: docker.io
+    strategy:
+      matrix:
+        name:
+          - "cw-terraform-ci"
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Container - ${{ matrix.name }}
+      env:
+        DOCKER_BUILDKIT: 1
+      run: |
+        docker build -t ${DOCKER_REPO}/${DOCKER_USER}/${{ matrix.name }} containers/${{ matrix.name }}/
