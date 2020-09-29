@@ -3,35 +3,14 @@
 # Terraform Deploy
 #
 
-provider "aws" {
-  region = "ap-southeast-1"
-}
+provider "aws" {}
 
 ## Remote Terraform State
-# S3 Bucket for storing terraform remote state
-#resource "aws_s3_bucket" "tf_state_bucket" {
-#  bucket = "cloud-ws-tf-remote-state"
-#  acl    = "private"
-#
-#  versioning {
-#    enabled = true
-#  }
-#  tags = {
-#    Name    = "Terraform State"
-#    Project = "cloud-ws"
-#  }
-#
-#  lifecycle {
-#    prevent_destroy = true
-#  }
-#}
-
 # Configure terraform to use remote state
 terraform {
   backend "s3" {
     bucket = "cloud-ws-tf-remote-state"
     key    = "tfstate/tf.tfstate"
-    region = "ap-southeast-1"
   }
 }
 
@@ -40,7 +19,6 @@ resource "aws_key_pair" "ssh_key" {
   key_name   = "cloud-ws-ssh-key"
   public_key = var.ssh_public_key
 }
-
 
 ## Netorking
 data "aws_vpc" "default" {

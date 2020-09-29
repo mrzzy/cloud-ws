@@ -20,11 +20,6 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
-variable "aws_region" {
-  type = string
-  description = "Sets the AWS region to create the instances in."
-}
-
 variable "ami_id" {
   type = string
   description = "Sets the AMI VM image used by created instances"
